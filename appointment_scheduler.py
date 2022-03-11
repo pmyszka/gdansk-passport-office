@@ -6,6 +6,7 @@ import time
 import urllib3
 
 from notifiers import PushoverNotifier
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -30,9 +31,9 @@ class GdanskPassportOffice:
         "Failed to contact the APIs: HTTP {0}".format(response.status_code))
       sys.exit(1)
 
+    logger.info("{0} - {1}".format(datetime.now(), response.text))
     if response.text != '[]':
       self.notifier.notify("Available slots: {0}".format(response.text))
-      logger.info("Response: {0}".format(response.text))
 
   def scan_for_appointments(self):
     schedule.every(5).seconds.do(self.list_appointments)
